@@ -1,0 +1,8 @@
+{
+	"name": "christmas-gift-exchange-assignment",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-18-bullseye",
+	"runArgs": [
+		"--name",
+		"christmas-gift-exchange-assignment"
+	]
+}
