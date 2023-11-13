@@ -19,42 +19,40 @@ const members = JSON.parse(fs.readFileSync('./members.json', 'utf8'));
 const shuffle = (array) => [...array].sort(() => Math.random() - Math.random());
 
 /**
- * 配列の次の要素を取得します。
- * 最後の要素の場合は最初の要素を取得します。
- * @param {any[]} array 配列
- * @param {number} index インデックス番号
- * @returns 配列の次の要素
+ * 関数が成功するまで指定した回数実行します。
+ * @param {Function} fn 関数
+ * @param {number} count 試行回数
+ * @returns Promise
  */
-const nextItem = (array, index) =>
-  array.at(index === array.length - 1 ? 0 : index + 1);
+const retry = (fn, count) => {
+  return Array(count - 2).fill(undefined).reduce(
+    (result) => result.catch(() => fn()), Promise.reject().catch(() => fn()));
+}
 
 /**
+ * メンバーの並び替えを実行します。
  * 除外するパターンを考慮した、並び替えたメンバーのリストを返します。
- * @param {Member[]} members 並び替えを行うメンバーのリスト
+ * @param {[Member, ...Member[]]} members 並び替えを行うメンバーのリスト
  * @returns 並び替えたメンバーのリスト
  */
-const shuffleMembers = (members) => {
-  while (true) {
-    const shuffled = shuffle(members);
-    if (
-      shuffled.every(
-        (member, index) =>
-          !member.exclusions.includes(nextItem(shuffled, index).no)
-      )
-    ) {
-      return shuffled;
-    }
-  }
-};
+const execute = ([from, ...others]) => {
+  if (!others.length) return [];
+
+  const to = others.find(member => !from.exclusions.includes(member.no));
+  if (!to) throw new Error('組み合わせが見つかりません。');
+
+  return [from, ...execute([to, ...others.filter(member => member.no !== to.no)])];
+}
 
 /**
  * エントリーポイント
  */
 const main = () => {
-  const shuffled = shuffleMembers(members);
-  shuffled.forEach((member, index) =>
-    console.log(`${member.name} → ${nextItem(shuffled, index).name}`)
-  );
+  const result = execute(shuffle(members));
+
+  const [head, ...tail] = result;
+  [...tail, head].map((to, index) => ({ from: result.at(index), to }))
+    .forEach(({ from, to }) => console.log(`${from.name} → ${to.name}`));
 };
 
-main();
+retry(main, 10);
