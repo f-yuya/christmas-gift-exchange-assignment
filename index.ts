@@ -16,10 +16,30 @@ const members = JSON.parse(fs.readFileSync('./members.json', 'utf8'));
 
 /**
  * 配列を並び替えます。
- * @param array 並び変える配列
+ * @param array 配列
  * @returns 並び替えた配列
  */
 const shuffle = <T>(array: T[]) => [...array].sort(() => Math.random() - Math.random());
+
+/**
+ * 配列を左シフトします。
+ * @param array 配列 
+ * @returns 左シフトした配列
+ */
+const shiftLeft = <T>(array: T[]) => {
+  const [head, ...tail] = array;
+  return [...tail, head];
+}
+
+/**
+ * 配列の各要素から成る配列を作成します。
+ * @param left 配列
+ * @param right 配列
+ * @returns 配列の各要素から成る配列
+ */
+const zip = <T, U>(left: T[], right: U[]): [T, U][] => {
+  return Array.from(Array(Math.min(left.length, right.length)), (_, i) => [left[i], right[i]]);
+}
 
 /**
  * 関数が成功するまで指定した回数実行します。
@@ -54,9 +74,8 @@ const execute = (members: Member[]): Member[] => {
 const main = () => {
   const result = execute(shuffle(members));
 
-  const [head, ...tail] = result;
-  [...tail, head].map((to, index) => ({ from: result.at(index), to }))
-    .forEach(({ from, to }) => console.log(`${from?.name} → ${to.name}`));
+  zip(result, shiftLeft(result))
+    .forEach(([from, to]) => console.log(`${from .name} → ${to.name}`));
 };
 
 retry(main, 10);
