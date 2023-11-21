@@ -1,30 +1,33 @@
-const fs = require('fs');
+import fs from 'fs';
 
 /**
  * メンバー型
- * @typedef {{ no: number; name: string; exclusions: number[] }} Member
  */
+type Member = {
+  no: number;
+  name: string;
+  exclusions: Member["no"][]
+}
 
 /**
  * メンバーのリスト
- * @type {Member[]}
  */
 const members = JSON.parse(fs.readFileSync('./members.json', 'utf8'));
 
 /**
  * 配列を並び替えます。
- * @param {any[]} array
+ * @param array 並び変える配列
  * @returns 並び替えた配列
  */
-const shuffle = (array) => [...array].sort(() => Math.random() - Math.random());
+const shuffle = <T>(array: T[]) => [...array].sort(() => Math.random() - Math.random());
 
 /**
  * 関数が成功するまで指定した回数実行します。
- * @param {Function} fn 関数
- * @param {number} count 試行回数
+ * @param fn 関数
+ * @param count 試行回数
  * @returns Promise
  */
-const retry = (fn, count) => {
+const retry = (fn: Function, count: number) => {
   return Array(count - 2).fill(undefined).reduce(
     (result) => result.catch(() => fn()), Promise.reject().catch(() => fn()));
 }
@@ -32,10 +35,11 @@ const retry = (fn, count) => {
 /**
  * メンバーの並び替えを実行します。
  * 除外するパターンを考慮した、並び替えたメンバーのリストを返します。
- * @param {[Member, ...Member[]]} members 並び替えを行うメンバーのリスト
+ * @param members 並び替えを行うメンバーのリスト
  * @returns 並び替えたメンバーのリスト
  */
-const execute = ([from, ...others]) => {
+const execute = (members: Member[]): Member[] => {
+  const [from, ...others] = members;
   if (!others.length) return [];
 
   const to = others.find(member => !from.exclusions.includes(member.no));
@@ -52,7 +56,7 @@ const main = () => {
 
   const [head, ...tail] = result;
   [...tail, head].map((to, index) => ({ from: result.at(index), to }))
-    .forEach(({ from, to }) => console.log(`${from.name} → ${to.name}`));
+    .forEach(({ from, to }) => console.log(`${from?.name} → ${to.name}`));
 };
 
 retry(main, 10);
