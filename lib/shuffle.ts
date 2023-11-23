@@ -1,9 +1,9 @@
-type ShuffledArray<T> = Array<T> & { _shuffledArrayBrand: never; };
+type ShuffledArray<T> = Array<T> & { _shuffledArrayBrand: never };
 
 declare global {
-    interface Array<T> {
-        shuffle(): ShuffledArray<T>
-    }
+  interface Array<T> {
+    shuffle(): ShuffledArray<T>;
+  }
 }
 
 /**
@@ -12,7 +12,9 @@ declare global {
  * @returns 並び変えた配列
  */
 Array.prototype.shuffle = function <T>(this: T[]) {
-    return [...this].sort(() => Math.random() - Math.random()) as ShuffledArray<T>;
+  return [...this].sort(
+    () => Math.random() - Math.random(),
+  ) as ShuffledArray<T>;
 };
 
-export { };
+export {};

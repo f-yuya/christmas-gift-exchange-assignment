@@ -1,5 +1,10 @@
 {
+  "scripts": {
+    "test": "npx vitest run"
+  },
   "devDependencies": {
-    "ts-node": "^10.9.1"
+    "prettier": "^3.1.0",
+    "ts-node": "^10.9.1",
+    "vitest": "^0.34.6"
   }
 }

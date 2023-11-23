@@ -4,7 +4,11 @@
  * @param count 試行回数
  * @returns Promise
  */
-export const retry = (fn: Function, count: number) => {
-    return Array(count).fill(undefined).reduce(
-        (result) => result.catch(() => fn()), Promise.reject());
-}
+export const retry = <T>(
+  fn: (...args: unknown[]) => T,
+  count: number,
+): Promise<T> => {
+  return Array(count)
+    .fill(undefined)
+    .reduce((result) => result.catch(() => fn()), Promise.reject());
+};
