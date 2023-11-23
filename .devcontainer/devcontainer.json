@@ -1,8 +1,10 @@
 {
-	"name": "christmas-gift-exchange-assignment",
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
-	"runArgs": [
-		"--name",
-		"christmas-gift-exchange-assignment"
-	]
+  "name": "christmas-gift-exchange-assignment",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+  "runArgs": ["--name", "christmas-gift-exchange-assignment"],
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode"]
+    }
+  }
 }
