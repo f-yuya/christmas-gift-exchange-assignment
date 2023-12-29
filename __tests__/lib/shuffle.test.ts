@@ -1,17 +1,11 @@
-import { expect, it, vi } from "vitest";
+import { expect, it } from "vitest";
 import "../../lib/shuffle";
 
-function* mockedRandomGenerator(): Generator<number> {
-  for (let i = 0; ; i++) yield i;
-}
-
 it("正常に処理が行われることを確認する。", () => {
-  // Array.shuffle() では、Math.random() による比較でソートを行っているためモックする。
-  const generator = mockedRandomGenerator();
-  vi.spyOn(Math, "random").mockImplementation(() => generator.next().value);
+  const array = [1, 2, 3, 4, 5];
+  const actual = array.shuffle();
 
-  const actual = [1, 2, 3, 4, 5].shuffle();
-  const expected = [5, 4, 3, 2, 1];
-
-  expect(actual).toEqual(expected);
+  // シャッフル後の配列の長さと要素が同じことを確かめる。
+  expect(actual).toHaveLength(array.length);
+  expect([...actual].sort()).toEqual(array);
 });

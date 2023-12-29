@@ -1,3 +1,5 @@
+import { range } from "./range";
+
 export type ShuffledArray<T> = Array<T> & { _shuffledArrayBrand: never };
 
 declare global {
@@ -12,9 +14,12 @@ declare global {
  * @returns 並び変えた配列
  */
 Array.prototype.shuffle = function <T>(this: T[]) {
-  return [...this].sort(
-    () => Math.random() - Math.random(),
-  ) as ShuffledArray<T>;
-};
+  const array = [...this];
 
-export {};
+  for (const i of range(0, array.length)) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+
+  return array as ShuffledArray<T>;
+};
