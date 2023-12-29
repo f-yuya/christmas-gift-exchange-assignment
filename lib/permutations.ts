@@ -11,8 +11,8 @@ export function* permutations<T>(array: T[]): Generator<T[]> {
 
   for (const current of range(0, array.length)) {
     const rest = array.filter((_, index) => index !== current);
-    for (const permutation of permutations(rest)) {
-      yield [array[current], ...permutation];
+    for (const pattern of permutations(rest)) {
+      yield [array[current], ...pattern];
     }
   }
 }
