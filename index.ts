@@ -1,6 +1,6 @@
 import fs from "fs";
 import { circularPermutations } from "./lib/circularPermutations";
-import "./lib/shiftLeft";
+import "./lib/rotate";
 import "./lib/shuffle";
 import { zip } from "./lib/zip";
 
@@ -32,7 +32,7 @@ const isValidPair = (from: Member, to: Member) =>
  * @param members メンバーのリスト
  * @returns ペア
  */
-const toPairs = (members: Member[]) => zip(members, members.shiftLeft());
+const toPairs = (members: Member[]) => zip(members, members.rotate(1));
 
 /**
  * エントリーポイント
