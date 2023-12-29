@@ -47,7 +47,7 @@ const main = () => {
     }
   }
 
-  throw new Error("ペアを生成できません。");
+  throw new Error("すべてのパターンを検証しましたが、ペアを生成できません。");
 };
 
 main();
