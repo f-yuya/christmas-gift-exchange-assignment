@@ -2,6 +2,7 @@ import fs from "fs";
 import { circularPermutations } from "./lib/circularPermutations";
 import "./lib/rotate";
 import "./lib/shuffle";
+import { ShuffledArray } from "./lib/shuffle";
 import { zip } from "./lib/zip";
 
 /**
@@ -12,11 +13,6 @@ type Member = {
   name: string;
   exclusions: Member["no"][];
 };
-
-/**
- * メンバーのリスト
- */
-const members: Member[] = JSON.parse(fs.readFileSync("./members.json", "utf8"));
 
 /**
  * 組み合わせが正しいか検証します。
@@ -35,10 +31,11 @@ const isValidPair = (from: Member, to: Member) =>
 const toPairs = (members: Member[]) => zip(members, members.rotate(1));
 
 /**
- * エントリーポイント
+ * メンバーの組み合わせを作成します。
+ * @param members 並び変えられたメンバーの配列
  */
-const main = () => {
-  for (const pattern of circularPermutations(members.shuffle())) {
+const execute = (members: ShuffledArray<Member>) => {
+  for (const pattern of circularPermutations(members)) {
     const pairs = toPairs(pattern);
     if (pairs.every((pair) => isValidPair(...pair))) {
       return pairs.forEach(([from, to]) =>
@@ -46,8 +43,18 @@ const main = () => {
       );
     }
   }
-
   throw new Error("すべてのパターンを検証しましたが、ペアを生成できません。");
+};
+
+/**
+ * エントリーポイント
+ */
+const main = () => {
+  const members: Member[] = JSON.parse(
+    fs.readFileSync("./members.json", "utf8")
+  );
+
+  execute(members.shuffle());
 };
 
 main();

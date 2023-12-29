@@ -1,4 +1,4 @@
-type ShuffledArray<T> = Array<T> & { _shuffledArrayBrand: never };
+export type ShuffledArray<T> = Array<T> & { _shuffledArrayBrand: never };
 
 declare global {
   interface Array<T> {
