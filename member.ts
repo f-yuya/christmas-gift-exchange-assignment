@@ -44,7 +44,7 @@ export function* pairsGenerator(
 ): Generator<Pair[]> {
   for (const pattern of circularPermutations(members)) {
     const pairs = toPairs(pattern);
-    if (pairs.every((pair) => isValidPair(pair))) {
+    if (pairs.every(isValidPair)) {
       yield pairs;
     }
   }
